@@ -11,9 +11,20 @@ Dataset pochodzi z [Kaggle](https://www.kaggle.com/datasets/iamsumat/spotify-top
 * Atrybuty:
     * BPM, energia, taneczność, akustyczność, popularność.
     * Gatunek muzyczny, rok wydania, tytuł i wykonawca.
-
-## Podział danych 
-
+* Opis kolumn: 
+    * Title: Tytuł utworu
+    * Artist: Nazwa artysty
+    * Top Genre: Gatunek utworu
+    * Year: Rok wydania utworu
+    * Beats per Minute(BPM): Tempo utworu
+    * Energy: Im wyzsza wartość tym bardziej energiczny utwór
+    * Danceability: Im wyzsza wartość tym łatwiej tańczyć do utwóru
+    * Loudness: Poziom głośności utworu
+    * Valance: Im wyzsza wartość tym bardziej pozytywny utwór
+    * Length: Długość trwania utworu
+    * Acoustic: Im wyzsza wartość tym bardziej akustyczny utwór
+    * Speechiness: Im wyzsza wartość tym więcej tekstu zawiera piosenka
+    * Popularity: Im wyzsza wartość tym jest bardziej popularny utwór
 
 ## Wnioski z raportu analizy danych
 ### Braki danych
