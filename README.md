@@ -30,20 +30,10 @@ Dataset pochodzi z [Kaggle](https://www.kaggle.com/datasets/iamsumat/spotify-top
 Usunięte zostały kolumny takie jak: Artist, Title, Index, poniewaz były to wartości unikalne, które nie wpływają na predykcję.
 Kolumny Year oraz Top Genre rowniez zostały usunięte, ze względu na to, ze nie są one przydatne w dalszych procesach a redukcja zbędnych kolumn zmniejsza wymiarowość danych, co pozwola na szybsze działanie modeli AutoML.
 
-## Wnioski z raportu analizy danych
-### Braki danych
+## Braki danych
 * Dataset nie zawiera brakujących wartości w żadnej kolumnie, co wskazuje na wysoką jakość danych.
 * Nie było potrzeby imputacji lub usuwania danych.
 * Nie występują równiez zduplikowane rekordy
-### Zmienne numeryczne:
-* Histogramy zmiennych numerycznych, takich jak Popularity, Energy, czy Danceability, wskazują na zróżnicowane rozkłady:
-    * Popularity: Rozkład jest nieco prawostronny, z większą liczbą mniej popularnych utworów (większość wartości w zakresie 40-70).
-    * Energy i Danceability: Obie zmienne są zbliżone do rozkładu normalnego, z lekkim przesunięciem w kierunku wyższych wartości.
-    * Wartości odstające w zmiennych takich jak Loudness i Valence są obecne, ale nie wpływają znacząco na całość analizy.
-### Wartości odstające 
-* Zmienne takie jak Popularity i Loudness:
-    * Wykresy pudełkowe wskazują na obecność wartości odstających, ale ich wpływ nie jest na tyle istotny, aby je usuwać.
-    * Wartości odstające mogą reprezentować ekstremalnie popularne utwory lub nietypowe style muzyczne.
 
 ## Analiza wyników z AutoML
 Do znalezienia najlepszego modelu został uzyty TPOT.
@@ -55,6 +45,7 @@ Modele rekomendowane przez TPOT:
     * Wynik CV: 0.883
 3. **GradientBoostingClassifier**:
     * Wynik CV: 0.883
+   
 ## Wnioski
 * SGDClassifier uzyskał najwyższy wynik walidacji krzyżowej (CV score = 0.887) spośród wszystkich przetestowanych modeli.
 * Model osiągnął dokładność 0.804 na zbiorze testowym - Jest to wysoka dokładność w porównaniu z innymi modelami, co oznacza, że model radzi sobie dobrze również na nowych danych
