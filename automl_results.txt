@@ -1,0 +1,1 @@
+Dokładność modelu na zbiorze testowym: 0.8042959427207638

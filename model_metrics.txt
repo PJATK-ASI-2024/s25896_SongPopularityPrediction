@@ -1,0 +1,13 @@
+R²: -0.10846560846560882
+RMSE: 0.31281308898385013
+MAE: 0.09785202863961814
+
+Raport klasyfikacji:
+              precision    recall  f1-score   support
+
+           0       0.91      0.99      0.95       378
+           1       0.50      0.07      0.13        41
+
+    accuracy                           0.90       419
+   macro avg       0.70      0.53      0.54       419
+weighted avg       0.87      0.90      0.87       419
