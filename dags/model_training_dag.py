@@ -29,7 +29,7 @@ def split_data(**kwargs):
     raw_data_json = ti.xcom_pull(task_ids='load_processed_data', key='raw_data')
     df = pd.read_json(raw_data_json)
 
-    target_column = 'TopList'
+    target_column = 'Popularity'
     if target_column not in df.columns:
         raise KeyError(f"Target column '{target_column}' not found in the dataset.")
 
