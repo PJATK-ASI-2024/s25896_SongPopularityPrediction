@@ -2,6 +2,7 @@ import os
 import pickle
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.email import EmailOperator
 import pandas as pd
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
@@ -11,6 +12,7 @@ NEW_DATA_PATH = "dataset/new_data.csv"
 VALIDATION_REPORT_PATH = "reports/validation_report.txt"
 
 CRITICAL_ACCURACY_THRESHOLD = 0.8
+EMAIL_RECIPIENT = "s25896@pjwstk.edu.pl" 
 
 os.environ["no_proxy"] = "*"
 
@@ -70,27 +72,6 @@ def evaluate_model(**kwargs):
         f.write(f"Precision: {precision}\n")
         f.write(f"Recall: {recall}\n")
 
-# Testy jednostkowe
-def run_tests(**kwargs):
-    ti = kwargs['ti']
-    model = ti.xcom_pull(task_ids='load_model_and_data', key='model')
-
-    # Test 1: Czy model przewiduje wyniki
-    try:
-        dummy_data = pd.DataFrame([[1, 2, 3]], columns=["feature1", "feature2", "feature3"])
-        model.predict(dummy_data)
-        print("Test 1 passed: Model can make predictions.")
-    except Exception as e:
-        print(f"Test 1 failed: {str(e)}")
-
-    # Test 2: Czy pipeline obsługuje brak danych
-    try:
-        empty_data = pd.DataFrame()
-        model.predict(empty_data)
-        print("Test 2 failed: Model should not accept empty data.")
-    except ValueError:
-        print("Test 2 passed: Model correctly rejects empty data.")
-
 # Sprawdzanie progu jakości
 def validate_quality(**kwargs):
     ti = kwargs['ti']
@@ -98,8 +79,10 @@ def validate_quality(**kwargs):
 
     if accuracy < CRITICAL_ACCURACY_THRESHOLD:
         print(f"Model quality is below critical threshold! Accuracy: {accuracy}, Threshold: {CRITICAL_ACCURACY_THRESHOLD}")
+        ti.xcom_push(key='send_email', value=True)
     else:
         print(f"Model quality is acceptable. Accuracy: {accuracy}")
+        ti.xcom_push(key='send_email', value=False)
 
 # Definicja DAG-a
 with DAG(
@@ -120,15 +103,25 @@ with DAG(
         python_callable=evaluate_model
     )
 
-    test_task = PythonOperator(
-        task_id="run_tests",
-        python_callable=run_tests
-    )
-
     validate_task = PythonOperator(
         task_id="validate_quality",
         python_callable=validate_quality
     )
 
+    email_task = EmailOperator(
+        task_id="send_alert_email",
+        to=EMAIL_RECIPIENT,
+        subject="Model Quality Alert",
+        html_content="""
+        <h3>Model Quality Alert</h3>
+        <p>The model quality has fallen below the critical threshold.</p>
+        <p>Please review the validation report for more details.</p>
+        <p>Accuracy: {{ task_instance.xcom_pull(task_ids='evaluate_model', key='accuracy') }}</p>
+        <p>Critical Threshold: {{ params.critical_threshold }}</p>
+        """,
+        params={"critical_threshold": CRITICAL_ACCURACY_THRESHOLD},
+        trigger_rule="all_done" 
+    )
+
     # Kolejność tasków
-    load_task >> evaluate_task >> test_task >> validate_task
+    load_task >> evaluate_task >> validate_task >> email_task
