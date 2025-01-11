@@ -57,6 +57,41 @@ Modele rekomendowane przez TPOT:
 * MAE: 0.09785202863961814
 
 
+## Machine Learning Pipeline i REST API
+### Uruchamianie środowiska
+
+##### Wymagania wstępne
+- Zainstalowany Docker
+- Zainstalowany Postman lub inny klient API (np. cURL)
+
+#### Uruchamianie API
+1. **Zbuduj obraz Dockera**:
+   ```
+   docker build -t jchainska/model-api .
+   ```
+2. Uruchom kontener
+    ```
+    docker run -p 8000:8000 jchainska/model-api
+   ```
+   
+#### Testowanie API w Postmanie
+1. Stwórz request (POST)
+2. W polu URL wpisz: http://localhost:8000/predict
+3. Dodaj dane wejściowe (JSON):
+    ```
+    {
+      "Energy": 1.0,
+      "Danceability": 2.5,
+      "Loudness": 0.7
+    }
+    ```
+4. Wyślij request
+5. Powinna zostać zwrócona odpowiedź z przewidywaniem, np. 
+    ```
+   {
+     "prediction": [1]
+   }
+    ```
 
 
 
